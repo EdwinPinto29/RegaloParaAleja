@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#688acc">
+  <title>Para ti, mi amor 🌻</title>
+
+  <!-- Vista previa al pegar el link en WhatsApp -->
+  <meta property="og:title" content="Tengo algo para ti 🌻">
+  <meta property="og:description" content="Ábrelo y toca la pantalla 💛">
+  <meta property="og:type" content="website">
+  <!-- Cambia esta URL por la tuya cuando publiques en GitHub Pages: -->
+  <meta property="og:image" content="https://TU-USUARIO.github.io/TU-REPOSITORIO/preview.png">
+
+  <style>
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;           /* sin scroll en celular */
+      overscroll-behavior: none;  /* evita el "rebote" al deslizar */
+    }
+
+    body {
+      position: fixed;            /* fija la pantalla en iOS/Android */
+      inset: 0;
+      height: 100vh;
+      height: 100dvh;             /* alto real en celulares (con barra del navegador) */
+      background: radial-gradient(ellipse at 50% 85%, #dbb800 0%, #688acc 55%);
+      font-family: "Trebuchet MS", "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+      cursor: pointer;
+      touch-action: manipulation; /* toques rápidos, sin zoom por doble toque */
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    /* Pasto */
+    .pasto {
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      height: calc(10vh + env(safe-area-inset-bottom));
+      background: #339545;
+      z-index: 200;
+    }
+
+    /* Jardín: las flores viven aquí, encima del pasto */
+    .jardin {
+      position: absolute;
+      left: 0; right: 0; top: 0;
+      bottom: calc(10vh + env(safe-area-inset-bottom));
+      overflow: hidden;
+    }
+
+    /* ---------- Mensaje ---------- */
+    .mensaje {
+      position: absolute;
+      z-index: 300;
+      top: calc(env(safe-area-inset-top) + 3vh);
+      left: 50%;
+      width: min(92vw, 640px);
+      padding: clamp(14px, 3.5vmin, 26px) clamp(16px, 4vmin, 32px);
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.86);
+      box-shadow: 0 10px 30px rgba(40, 50, 90, 0.25);
+      text-align: center;
+      color: #4a3a12;
+      opacity: 0;
+      transform: translate(-50%, -30px);
+      animation: aparecer 1s 2.4s ease-out forwards;
+    }
+    @supports ((-webkit-backdrop-filter: blur(4px)) or (backdrop-filter: blur(4px))) {
+      .mensaje { background: rgba(255, 255, 255, 0.72); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+    }
+    @keyframes aparecer { to { opacity: 1; transform: translate(-50%, 0); } }
+
+    .mensaje h1 {
+      margin: 0 0 .35em;
+      font-size: clamp(26px, 7.5vmin, 52px);
+      line-height: 1.1;
+      color: #c28a00;
+      text-shadow: 0 2px 0 #fff3b0;
+    }
+    .mensaje p {
+      margin: 0;
+      font-size: clamp(15px, 3.9vmin, 22px);
+      line-height: 1.45;
+      min-height: 2.9em;          /* evita saltos cuando cambia la frase */
+      transition: opacity .35s ease;
+    }
+    .mensaje .pista {
+      display: inline-block;
+      margin-top: .8em;
+      font-size: clamp(12px, 3.2vmin, 16px);
+      color: #7a6a3a;
+      animation: latir 1.6s ease-in-out infinite;
+    }
+    @keyframes latir { 50% { transform: scale(1.08); } }
+
+    /* Pantallas bajitas (celular acostado) */
+    @media (max-height: 480px) {
+      .mensaje { top: 8px; padding: 10px 18px; width: min(70vw, 560px); }
+      .mensaje h1 { font-size: clamp(20px, 7vh, 34px); margin-bottom: .15em; }
+      .mensaje p { font-size: clamp(13px, 4.2vh, 18px); min-height: 2.6em; }
+      .mensaje .pista { margin-top: .3em; }
+    }
+
+    /* Corazoncitos que salen al tocar */
+    .corazon {
+      position: absolute;
+      z-index: 250;
+      pointer-events: none;
+      font-size: clamp(18px, 5vmin, 30px);
+      animation: flotar 1.4s ease-out forwards;
+    }
+    @keyframes flotar {
+      0%   { opacity: 1; transform: translate(-50%, -50%) scale(.6); }
+      100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), -170%) scale(1.2); }
+    }
+
+    /* ---------- Girasol (tu diseño original) ---------- */
+    .sunflwr {
+      width: 80vmin;
+      height: 80vmin;
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translate(-50%, 0%);
+    }
+    .sunflwr__leaf--left, .sunflwr__leaf--right {
+      width: 0%;
+      height: 20%;
+      border-radius: 0% 50% 0% 50%;
+      position: absolute;
+      background: #6f8e4b;
+      top: 70%;
+      left: 45%;
+      transform: translate(-100%, -50%) rotate(-20deg);
+      animation: sunflwr__leaf forwards 1s 0.5s;
+    }
+    .sunflwr__leaf--right {
+      top: 80%;
+      left: 55%;
+      transform: translate(0%, -50%) rotate(-70deg);
+    }
+    @keyframes sunflwr__leaf {
+      0%   { width: 0%;  border: 0px solid black; }
+      100% { width: 20%; border: 2px solid black; }
+    }
+    .sunflwr__stem {
+      position: absolute;
+      transform: translate(-50%, 0%);
+      width: 5%;
+      height: 60%;
+      background: #556d39;
+      left: 50%;
+      bottom: 0%;
+      border: 2px solid black;
+      animation: sunflwr__stem forwards 1s;
+    }
+    @keyframes sunflwr__stem { 0% { height: 0; } 100% { height: 60%; } }
+    .sunflwr__center {
+      border-radius: 50%;
+      background-color: #3c1f03;
+      transform: translate(-50%, -50%);
+      position: absolute;
+      left: 50%;
+      top: 40%;
+      z-index: 2;
+      animation: sunflwr__center 1s 1s forwards;
+    }
+    @keyframes sunflwr__center {
+      0%   { width: 0%;  height: 0%; }
+      100% { width: 25%; height: 25%; }
+    }
+    [class^="sunflwr__pedal"] {
+      border-radius: 50%;
+      background: #f2fe00;
+      transform: translate(-50%, -50%);
+      position: absolute;
+      left: 50%;
+      top: 40%;
+      animation: grow-pedal-back 1s 1.5s forwards;
+    }
+    .sunflwr__pedal--2 { transform: translate(-50%, -50%) rotate(30deg); }
+    .sunflwr__pedal--3 { transform: translate(-50%, -50%) rotate(60deg); }
+    .sunflwr__pedal--4 { transform: translate(-50%, -50%) rotate(90deg); }
+    .sunflwr__pedal--5 { transform: translate(-50%, -50%) rotate(120deg); }
+    .sunflwr__pedal--6 { transform: translate(-50%, -50%) rotate(150deg); }
+    @keyframes grow-pedal-back {
+      0%   { width: 0%;  height: 0%;  border: 0px solid black; }
+      100% { width: 15%; height: 45%; border: 2px solid black; }
+    }
+    .sunflwr__pedal--7, .sunflwr__pedal--8, .sunflwr__pedal--9,
+    .sunflwr__pedal--10, .sunflwr__pedal--11, .sunflwr__pedal--12 {
+      border-radius: 20% 50% 20% 50%;
+      animation: grow-pedal-front 1s 2s forwards;
+    }
+    .sunflwr__pedal--7  { transform: translate(-50%, -50%) rotate(15deg); }
+    .sunflwr__pedal--8  { transform: translate(-50%, -50%) rotate(45deg); }
+    .sunflwr__pedal--9  { transform: translate(-50%, -50%) rotate(75deg); }
+    .sunflwr__pedal--10 { transform: translate(-50%, -50%) rotate(105deg); }
+    .sunflwr__pedal--11 { transform: translate(-50%, -50%) rotate(135deg); }
+    .sunflwr__pedal--12 { transform: translate(-50%, -50%) rotate(165deg); }
+    @keyframes grow-pedal-front {
+      0%   { height: 0%;  width: 0%;  border: 0px solid black; }
+      100% { height: 35%; width: 10%; border: 2px solid black; }
+    }
+
+    /* Respeta a quien tiene las animaciones reducidas en su teléfono */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01s !important; animation-delay: 0s !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="jardin" id="jardin"></div>
+  <div class="pasto"></div>
+
+  <div class="mensaje" role="status" aria-live="polite">
+    <h1>Te amo, mi amor 🌻</h1>
+    <p id="frase">Así como los girasoles buscan el sol, mi corazón te busca a ti todos los días.</p>
+    <span class="pista" id="pista">Toca la pantalla 💛</span>
+  </div>
+
+  <script>
+    (function () {
+      // ✏️ Cambia o agrega frases aquí. Cada toque muestra la siguiente.
+      var frases = [
+        "Así como los girasoles buscan el sol, mi corazón te busca a ti todos los días.",
+        "Contigo todo es más bonito, más tranquilo y más mío.",
+        "Gracias por quedarte, por reír conmigo y por hacer de lo simple algo especial.",
+        "Si pudiera regalarte algo, sería verte como yo te veo: increíble.",
+        "Eres mi lugar favorito en el mundo.",
+        "Cada flor de este jardín es un \"te amo\" que no te dije hoy.",
+        "Te amo hoy, mañana y todos los días que vengan. 💛"
+      ];
+
+      var jardin = document.getElementById('jardin');
+      var fraseEl = document.getElementById('frase');
+      var pistaEl = document.getElementById('pista');
+      var indice = 0;
+      var MAX_FLORES = 45; // evita que el celular se ponga lento
+
+      var PETALOS = '';
+      for (var i = 1; i <= 12; i++) PETALOS += '<div class="sunflwr__pedal--' + i + '"></div>';
+      var PARTES = '<div class="sunflwr__leaf--left"></div><div class="sunflwr__leaf--right"></div>' +
+                   '<div class="sunflwr__stem"></div><div class="sunflwr__center"></div>' + PETALOS;
+
+      function azar(min, max) { return Math.round(Math.random() * (max - min)) + min; }
+
+      function crearFlor(izq, tam, extra) {
+        var f = document.createElement('div');
+        f.className = 'sunflwr';
+        f.innerHTML = PARTES;
+        f.style.left = izq + '%';
+        f.style.width = tam + 'vmin';
+        f.style.height = tam + 'vmin';
+        f.style.zIndex = 100 - tam;
+        if (extra) f.style.filter = 'saturate(' + azar(70, 100) + '%) brightness(' + azar(85, 140) + '%)';
+        jardin.appendChild(f);
+        while (jardin.children.length > MAX_FLORES) jardin.removeChild(jardin.firstChild);
+      }
+
+      // Primer girasol grande, centrado
+      crearFlor(50, 80, false);
+
+      function crecerJardin() {
+        var posiciones = [];
+        while (posiciones.length < 4) {
+          var p = azar(8, 92); // dentro de la pantalla (las flores están centradas en este punto)
+          var choca = posiciones.some(function (x) { return Math.abs(p - x) < 6; });
+          if (!choca) posiciones.push(p);
+        }
+        posiciones.forEach(function (p, n) {
+          setTimeout(function () { crearFlor(p, azar(30, 70), true); }, n * 150);
+        });
+      }
+
+      function siguienteFrase() {
+        indice = (indice + 1) % frases.length;
+        fraseEl.style.opacity = 0;
+        setTimeout(function () { fraseEl.textContent = frases[indice]; fraseEl.style.opacity = 1; }, 300);
+        if (indice === frases.length - 1) pistaEl.textContent = 'Sigue tocando para más girasoles 🌻';
+      }
+
+      function corazon(x, y) {
+        var emojis = ['💛', '🌻', '💖', '✨'];
+        var c = document.createElement('span');
+        c.className = 'corazon';
+        c.textContent = emojis[azar(0, emojis.length - 1)];
+        c.style.left = x + 'px';
+        c.style.top = y + 'px';
+        c.style.setProperty('--dx', azar(-40, 40) + 'px');
+        document.body.appendChild(c);
+        setTimeout(function () { c.remove(); }, 1500);
+      }
+
+      var ultimo = 0;
+      function alTocar(e) {
+        var ahora = Date.now();
+        if (ahora - ultimo < 350) return; // evita doble disparo táctil + clic
+        ultimo = ahora;
+        var x = e.clientX != null ? e.clientX : window.innerWidth / 2;
+        var y = e.clientY != null ? e.clientY : window.innerHeight / 2;
+        corazon(x, y);
+        crecerJardin();
+        siguienteFrase();
+      }
+
+      if (window.PointerEvent) {
+        document.addEventListener('pointerup', alTocar);
+      } else {
+        document.addEventListener('touchend', function (e) {
+          var t = e.changedTouches[0]; alTocar({ clientX: t.clientX, clientY: t.clientY });
+        });
+        document.addEventListener('click', alTocar);
+      }
+    })();
+  </script>
+</body>
+</html>
